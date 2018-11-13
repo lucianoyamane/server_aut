@@ -8,7 +8,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.xml.bind.DatatypeConverter;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -22,8 +28,26 @@ public class AutenticacaoController {
         if (autenticado) {
             resultado.put("autenticado", autenticado);
         }
+        try {
+            String key = generate(128);
+            resultado.put("access_token", key);
+            resultado.put("type_token", "Bearer");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
         return new ResponseEntity(resultado,
                 HttpStatus.OK);
+    }
+
+
+
+    public static String generate(final int keyLen) throws NoSuchAlgorithmException {
+
+        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+        keyGen.init(keyLen);
+        SecretKey secretKey = keyGen.generateKey();
+        byte[] encoded = secretKey.getEncoded();
+        return DatatypeConverter.printHexBinary(encoded).toLowerCase();
     }
 
 }

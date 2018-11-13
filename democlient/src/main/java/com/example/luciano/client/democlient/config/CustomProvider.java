@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +31,11 @@ public class CustomProvider implements AuthenticationProvider {
         if (usuarioAtenticado != null && usuarioAtenticado.size() > 0) {
             final List<GrantedAuthority> grantedAuths = new ArrayList<>();
             grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
-         auth = new UsernamePasswordAuthenticationToken(usuarioAtenticado.get("login"), usuarioAtenticado.get("senha"), grantedAuths);
+            auth = new UsernamePasswordAuthenticationToken(usuarioAtenticado.get("login"), usuarioAtenticado.get("senha"), grantedAuths);
+            Map<String, Object> details = new HashMap<>();
+            details.put("access_token",usuarioAtenticado.get("access_token"));
+            details.put("type_token",usuarioAtenticado.get("type_token"));
+            auth.setDetails(details);
         }
         return auth;
     }

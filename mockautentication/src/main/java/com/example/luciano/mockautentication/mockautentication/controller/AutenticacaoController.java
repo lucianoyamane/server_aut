@@ -8,14 +8,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping(value = "/autenticacao", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AutenticacaoController {
 
     @RequestMapping(value="/", method = RequestMethod.POST)
-    public ResponseEntity<Boolean> autentica(@RequestBody Object body) {
-        Boolean autenticado = body != null;
-        return new ResponseEntity(autenticado,
+    public ResponseEntity<Boolean> autentica(@RequestBody Map<String,Object> body) {
+        Boolean autenticado = body.get("login").equals("admin") && body.get("senha").equals("admin");
+        Map<String, Object> resultado = new HashMap<>();
+        if (autenticado) {
+            resultado.put("autenticado", autenticado);
+        }
+        return new ResponseEntity(resultado,
                 HttpStatus.OK);
     }
 

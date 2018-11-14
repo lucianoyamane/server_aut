@@ -1,5 +1,6 @@
 package com.example.luciano.client.democlient.config;
 
+import com.example.luciano.client.democlient.authentication.token.ApiKeyAuthenticationToken;
 import com.example.luciano.client.democlient.service.AutenticacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -25,13 +26,11 @@ public class CustomProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(final Authentication authentication) throws AuthenticationException {
-        UsernamePasswordAuthenticationToken auth = null;
+        ApiKeyAuthenticationToken auth = null;
 
         Map<String, Object> usuarioAtenticado = autenticacaoService.autenticar(authentication);
         if (usuarioAtenticado != null && usuarioAtenticado.size() > 0) {
-            final List<GrantedAuthority> grantedAuths = new ArrayList<>();
-            grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
-            auth = new UsernamePasswordAuthenticationToken(usuarioAtenticado.get("login"), usuarioAtenticado.get("senha"), grantedAuths);
+            auth = new ApiKeyAuthenticationToken(authentication.getCredentials().toString());
             Map<String, Object> details = new HashMap<>();
             details.put("access_token",usuarioAtenticado.get("access_token"));
             details.put("type_token",usuarioAtenticado.get("type_token"));
@@ -42,6 +41,6 @@ public class CustomProvider implements AuthenticationProvider {
 
     @Override
     public boolean supports(final Class<?> authentication) {
-        return authentication.equals(UsernamePasswordAuthenticationToken.class);
+        return authentication.equals(ApiKeyAuthenticationToken.class);
     }
 }

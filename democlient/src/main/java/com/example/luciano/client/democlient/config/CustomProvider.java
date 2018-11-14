@@ -1,15 +1,20 @@
 package com.example.luciano.client.democlient.config;
 
+import com.example.luciano.client.democlient.config.token.ApiKeyAuthorizationToken;
 import com.example.luciano.client.democlient.service.AutenticacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.security.auth.login.LoginException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +33,7 @@ public class CustomProvider implements AuthenticationProvider {
         UsernamePasswordAuthenticationToken auth = null;
 
         Map<String, Object> usuarioAtenticado = autenticacaoService.autenticar(authentication);
+
         if (usuarioAtenticado != null && usuarioAtenticado.size() > 0) {
             final List<GrantedAuthority> grantedAuths = new ArrayList<>();
             grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
@@ -36,12 +42,24 @@ public class CustomProvider implements AuthenticationProvider {
             details.put("access_token",usuarioAtenticado.get("access_token"));
             details.put("type_token",usuarioAtenticado.get("type_token"));
             auth.setDetails(details);
+        } else {
+            throw new UnauthorizedException("teste");
         }
+
         return auth;
+    }
+
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    private class UnauthorizedException extends AuthenticationException {
+        public UnauthorizedException(String msg) {
+            super(msg);
+        }
     }
 
     @Override
     public boolean supports(final Class<?> authentication) {
-        return authentication.equals(UsernamePasswordAuthenticationToken.class);
+        return authentication.equals(ApiKeyAuthorizationToken.class);
     }
+
+
 }

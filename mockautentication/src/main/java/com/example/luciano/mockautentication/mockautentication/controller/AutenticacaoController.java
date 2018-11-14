@@ -23,17 +23,17 @@ public class AutenticacaoController {
 
     @RequestMapping(value="/", method = RequestMethod.POST)
     public ResponseEntity<Boolean> autentica(@RequestBody Map<String,Object> body) {
-        Boolean autenticado = body.get("login").equals("admin") && body.get("senha").equals("admin");
+        Boolean autenticado = body.get("apikey").equals("my_apikeyx");
         Map<String, Object> resultado = new HashMap<>();
         if (autenticado) {
             resultado.put("autenticado", autenticado);
-        }
-        try {
-            String key = generate(128);
-            resultado.put("access_token", key);
-            resultado.put("type_token", "Bearer");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            try {
+                String key = generate(128);
+                resultado.put("access_token", key);
+                resultado.put("type_token", "Bearer");
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
         }
         return new ResponseEntity(resultado,
                 HttpStatus.OK);

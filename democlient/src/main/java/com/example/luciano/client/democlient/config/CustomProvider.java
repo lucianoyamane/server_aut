@@ -32,7 +32,6 @@ public class CustomProvider implements AuthenticationProvider {
 
         Map<String, Object> usuarioAtenticado = autenticacaoService.autenticar(authentication);
         if (usuarioAtenticado != null && usuarioAtenticado.size() > 0) {
-            final List<GrantedAuthority> grantedAuths = new ArrayList<>();
             auth = new ApiKeyAuthenticationToken(authentication.getCredentials().toString());
             Map<String, Object> details = new HashMap<>();
             details.put("access_token",usuarioAtenticado.get("access_token"));

@@ -1,6 +1,6 @@
 package com.example.luciano.client.democlient.filter;
 
-import com.example.luciano.client.democlient.authentication.service.AuthenticationService;
+import com.example.luciano.client.democlient.authentication.service.ApikeyCredentialsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -18,7 +18,7 @@ import java.io.IOException;
 public class StatelessAuthenticationFilter extends GenericFilterBean {
 
     @Autowired
-    private AuthenticationService authenticationService;
+    private ApikeyCredentialsService apikeyCredentialsService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -26,7 +26,7 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         Authentication authentication =
-                authenticationService.getAuthentication();
+                apikeyCredentialsService.getAuthentication();
         SecurityContextHolder.getContext().setAuthentication(authentication);
         authentication = authenticationManager.authenticate(authentication);
         if (authentication != null) {

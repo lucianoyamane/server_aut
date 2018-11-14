@@ -15,26 +15,28 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@Component
-@Order(1)
-public class TransactionFilter implements Filter {
+//@Component
+//@Order(1)
+public class TransactionFilter  {
 
-    @Autowired
-    private AuthenticationService authenticationService;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        Authentication authentication =
-                authenticationService.getAuthentication();
-        authentication = authenticationManager.authenticate(authentication);
-        if (authentication != null) {
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            filterChain.doFilter(servletRequest, servletResponse);
-        }
-    }
+//    implements Filter
+//    @Autowired
+//    private AuthenticationService authenticationService;
+//
+//    @Autowired
+//    private AuthenticationManager authenticationManager;
+//
+//
+//    @Override
+//    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+//        Authentication authentication =
+//                authenticationService.getAuthentication();
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        authentication = authenticationManager.authenticate(authentication);
+//        if (authentication != null) {
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
+//            filterChain.doFilter(servletRequest, servletResponse);
+//        }
+//    }
 
 }

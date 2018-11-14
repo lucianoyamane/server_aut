@@ -20,8 +20,7 @@ public class AutenticacaoService {
 
         try {
             Map<String, Object> usuarioMap = new HashMap<>();
-            usuarioMap.put("login", authentication.getPrincipal().toString());
-            usuarioMap.put("senha", authentication.getCredentials().toString());
+            usuarioMap.put("apikey", authentication.getCredentials().toString());
             return autenticacaoServiceRemote.autenticar(usuarioMap);
         } catch (HystrixRuntimeException e) {
             e.printStackTrace();
